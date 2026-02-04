@@ -1,0 +1,16 @@
+<h2>Shopping Cart Page</h2>
+
+<p>Items in cart: {{ cart_count }}</p>
+
+{% if cart_products %}
+    <ul>
+        {% for p in cart_products %}
+            <li>{{ p.name }} - {{ p.price }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Total: {{ total_price }}</h3>
+
+{% else %}
+    <p>Cart is empty</p>
+{% endif %}

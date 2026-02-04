@@ -1,0 +1,48 @@
+{% extends "app1/base.html" %}
+{% load static %}
+
+{% block title %}Home -  Shopvibe{% endblock %}
+
+{% block content %}
+<div class="home">
+
+    <!-- HERO SECTION -->
+    <div class="hero">
+        <h2>Welcome to Shopvibe clone</h2>
+        <p>Shop the best Electronic products online</p>
+        <a href="{% url 'app1:shop' %}" class="btn btn-primary">Start Shopping</a>
+    </div>
+
+
+  
+   
+ 
+
+    <!-- FEATURED PRODUCTS SECTION -->
+    <div class="featured-section">
+        <h3>Featured Products</h3>
+
+        <div class="products-grid">
+            {% for product in featured_products %}
+            <div class="product-card">
+                
+            {% if product.image_url %}
+                <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image">
+            {% else %}
+                <div class="product-image-placeholder">No Image</div>
+            {% endif %}
+                {% comment %} <h4>{{ product.name }}</h4> {% endcomment %}
+                <h4 style="text-align: center;">{{ product.name }}</h4>
+                <p class="price">₹{{ product.price }}</p>
+                <p class="stock">Stock: {{ product.stock }}</p>
+                <a href="{% url 'app1:shop' %}" class="btn btn-small">View in Shop</a>
+            </div>
+            {% empty %}
+                <p>No products available yet.</p>
+            {% endfor %}
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "app1/base.html" %}
+
+{% block title %}Shop - Shopvibe{% endblock %}
+
+{% block content %}
+<div class="shop-page">
+    <div class="shop-container">
+        <!-- Products Section -->
+        <div class="products-section">
+            <h2>Available Products</h2>
+            
+            {% if products %}
+            <div class="products-grid">
+                {% for product in products %}
+                <div class="product-card">
+                     {% if product.image_url %}
+                <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image">
+            {% else %}
+                <div class="product-image-placeholder">No Image</div>
+            {% endif %}
+                    <div class="product-info">
+                        <h3>{{ product.name }}</h3>
+                        <p class="description">{{ product.description|truncatewords:15 }}</p>
+                        <p class="price">${{ product.price }}</p>
+                        <p class="stock {% if product.stock > 0 %}in-stock{% else %}out-of-stock{% endif %}">
+                            {% if product.stock > 0 %}
+                                Stock: {{ product.stock }}
+                            {% else %}
+                                Out of Stock
+                            {% endif %}
+                        </p>
+                        
+                        <form method="post" class="add-to-cart-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="add">
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <button type="submit" class="btn btn-primary" {% if product.stock <= 0 %}disabled{% endif %}>
+                                Add to Cart
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="no-products">No products available. <a href="{% url 'app1:add_product' %}">Add one now!</a></p>
+            {% endif %}
+        </div>
+
+        <!-- Cart Section -->
+        <div class="cart-section">
+            <h2>Shopping Cart</h2>
+            
+            {% if cart_products %}
+            <div class="cart-items">
+                {% for item in cart_products %}
+                <div class="cart-item">
+                    <div class="item-info">
+                        <h4>{{ item.name }}</h4>
+                        <p class="item-price">${{ item.price }}</p>
+                    </div>
+                    <form method="post" class="remove-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="remove">
+                        <input type="hidden" name="product_id" value="{{ item.id }}">
+                        <button type="submit" class="btn btn-small btn-danger">Remove</button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="cart-summary">
+                <div class="summary-row">
+                    <span>Items in Cart:</span>
+                    <strong>{{ cart_count }}</strong>
+                </div>
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <strong>${{ total_price }}</strong>
+                </div>
+                <form method="post" action="{% url 'app1:checkout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary btn-full">Proceed to Checkout</button>
+                </form>
+            </div>
+            {% else %}
+            <p class="empty-cart">Your cart is empty. <a href="{% url 'app1:shop' %}">Browse products</a></p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

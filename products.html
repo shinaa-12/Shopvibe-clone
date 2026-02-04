@@ -1,0 +1,58 @@
+{% comment %} {% extends "app1/base.html" %}
+
+{% block title %}Products - Shopvibe {% endblock %}
+
+{% block content %}
+<div class="products-page">
+    <div class="page-header">
+        <h2>All Products</h2>
+        <!-- Removed Add New Product button -->
+    </div>
+
+    {% if products %}
+    <div class="products-grid">
+        {% for product in products %}
+        <div class="product-card">
+            {% if product.image_url %}
+                <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image">
+            {% else %}
+                <div class="product-image-placeholder">No Image</div>
+            {% endif %}
+            
+            <div class="product-info">
+                <h3>{{ product.name }}</h3>
+                <p class="description">{{ product.description|truncatewords:20 }}</p>
+                <p class="price">${{ product.price }}</p>
+                <p class="stock {% if product.stock > 0 %}in-stock{% else %}out-of-stock{% endif %}">
+                    Stock: {{ product.stock }}
+                </p>
+                {% comment %} <a href="{% url 'app1:shop' %}" class="btn btn-small">Add to Cart</a> {% endcomment %}
+                {% comment %} {% if user.is_staff %} {% endcomment %}
+                {% comment %} <a href="{% url 'app1:edit_product' product.id %}" class="btn btn-secondary" style="margin-left:8px;">Edit</a> {% endcomment %}
+                {% comment %} {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        <div class="cart-summary">
+                <div class="summary-row">
+                    <span>Items in Cart:</span>
+                    <strong>{{ cart_count }}</strong>
+                </div>
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <strong>${{ total_price }}</strong>
+                </div>
+                <form method="post" action="{% url 'app1:checkout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary btn-full">Proceed to Checkout</button>
+                </form>
+            </div>
+            {% else %}
+            <p class="empty-cart">Your cart is empty. <a href="{% url 'app1:shop' %}">Browse products</a></p>
+            {% endif %}
+    </div>
+    {% else %}
+    <p class="no-products">No products available yet.</p>
+    {% endif %}
+</div>
+{% endblock %} {% endcomment %}

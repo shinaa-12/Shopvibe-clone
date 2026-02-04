@@ -1,0 +1,41 @@
+{% extends "app1/base.html" %}
+
+{% block title %}My Orders - Shopvibe{% endblock %}
+
+{% block content %}
+<div class="orders-page">
+    <h2>My Orders</h2>
+
+    <!-- SUCCESS MESSAGES (Top me rakho) -->
+    {% if messages %}
+        {% for message in messages %}
+            <h5 style="color:green;">{{ message }}</h5>
+        {% endfor %}
+    {% endif %}
+
+    {% if orders %}
+        <div class="orders-list">
+            {% for order in orders %}
+            <div class="order-card">
+                <h3>Order #{{ order.id }}</h3>
+                <p>Placed on {{ order.created_at|date:"Y-m-d H:i" }}</p>
+                <p>Total: <strong>${{ order.total }}</strong></p>
+
+                <a href="{% url 'app1:order_detail' order.id %}" class="btn btn-small">View details</a>
+
+                <!-- DELETE BUTTON + CONFIRMATION POPUP -->
+                <form method="POST" action="{% url 'app1:delete_order' order.id %}" 
+                      onsubmit="return confirm('Are you sure you want to delete Order #{{ order.id }} ?');"
+                      style="display:inline;margin-left:10px;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-small">Delete</button>
+                </form>
+
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You have no orders yet. Start shopping!</p>
+    {% endif %}
+</div>
+{% endblock %}

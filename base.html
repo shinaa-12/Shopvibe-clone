@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Amazon Clone{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand border" style="color: white; border">
+
+
+                <h1><a href="{% url 'app1:home' %}">Shopvibe</a></h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'app1:home' %}">Home</a></li>
+                <li><a href="{% url 'app1:shop' %}">Shop</a></li>
+                <li><a href="{% url 'app1:orders' %}">Orders</a></li>
+                <li><a href="{% url 'app1:customer_list' %}">Customers</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'app1:logout' %}" class="btn-logout">Logout ({{ user.username }})</a></li>
+                {% else %}
+                    <li><a href="{% url 'app1:login' %}" class="btn-login">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="jumbotron" style='text-align:center;margin-left:300px;margin-right:300px;'>
+        <p>&copy;  2025 Shopvibe Clone 🖤 All rights reserved.
+</p>
+
+        </div>
+    </footer>
+</body>
+</html>

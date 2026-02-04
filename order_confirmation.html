@@ -1,0 +1,21 @@
+{% extends "app1/base.html" %}
+
+{% block title %}Order Confirmation - Shopvibe{% endblock %}
+
+{% block content %}
+<div class="order-confirmation">
+    <h2>Thank you — order placed!</h2>
+    <p>Your order <strong>#{{ order.id }}</strong> has been created on {{ order.created_at|date:"Y-m-d H:i" }}.</p>
+
+    <h3>Items</h3>
+    <ul>
+        {% for item in order.items.all %}
+            <li>{{ item.product.name }} — {{ item.quantity }} × ${{ item.price }}</li>
+        {% endfor %}
+    </ul>
+
+    <p class="total">Total paid: <strong>${{ order.total }}</strong></p>
+
+    <a href="{% url 'app1:home' %}" class="btn btn-primary">Continue shopping</a>
+</div>
+{% endblock %}
